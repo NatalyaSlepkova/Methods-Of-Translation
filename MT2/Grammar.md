@@ -1,4 +1,4 @@
-#Грамматика
+# Грамматика:
 
 * `S -> Word VARLIST;`
 * `VARLIST -> AMPERSAND & STAR & WORD, VARLIST`
@@ -19,7 +19,7 @@ VARLIST | Список переменных, разделенных запяты
 AMPERSAND | Взятие адреса (&)
 STAR | Указатель
 
-##Множества FIRST и FOLLOW для нетерминалов
+## Множества FIRST и FOLLOW для нетерминалов:
 
 `c` - любой символ [A-Z, a-z]
 
