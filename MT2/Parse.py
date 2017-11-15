@@ -57,6 +57,16 @@ class Parser:
         else:
             raise ParseException('Star not found')
 
+    def AMPERSAND(self):
+        token = self.LA.curToken
+        if token == Token.AMPERSAND:
+            global BoolToken
+            BoolToken = True
+            t = Tree(self.LA.curWord)
+            self.LA.nextToken()
+            return t
+        else:
+            raise ParseException('& not found')
 
     def VARLIST(self):
         token = self.LA.curToken
@@ -70,6 +80,14 @@ class Parser:
             children.append(star)
             if self.LA.curToken != Token.WORD:
                 raise ParseException('Word not found after Star')
+        if token == Token.AMPERSAND:
+            ampersand = self.AMPERSAND()
+            children.append(ampersand)
+            if self.LA.curToken == Token.STAR:
+                star = self.Star()
+                children.append(star)
+            if self.LA.curToken != Token.WORD and self.LA.curToken != Token.STAR:
+                raise ParseException('Unsuitable token found after &')
         if self.LA.curToken == Token.WORD:
             word = self.Word()
             children.append(word)
@@ -99,9 +117,9 @@ def dfs(v, tab=''):
 if __name__ == "__main__":
     try:
         # parser = Parser(open("test", "r"))
-        # T = Parser().parse(open("test", "r"))
-        s = "int a;"
-        T = Parser().parse(StringIO(s))
+        T = Parser().parse(open("test", "r"))
+        # s = "int a;"
+        # T = Parser().parse(StringIO(s))
     except ParseException as PE:
         print(PE.message, file=f)
     else:

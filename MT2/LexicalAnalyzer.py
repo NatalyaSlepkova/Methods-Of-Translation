@@ -7,7 +7,7 @@ class Token(Enum):
     COMMA = 2
     END = 3
     EMPTY = 4
-
+    AMPERSAND = 5
 
 class LexicalAnalyzer:
     def __init__(self, IS):
@@ -40,6 +40,11 @@ class LexicalAnalyzer:
             return
         if self.curChar == '':
             self.curToken = Token.EMPTY
+            return
+        if self.curChar == '&':
+            self.curToken = Token.AMPERSAND
+            self.nextChar()
+            self.curWord = '&'
             return
         star = self.curChar == "*"
         while self.curChar != "," and self.curChar != '' and not self.isBlank(self.curChar):
