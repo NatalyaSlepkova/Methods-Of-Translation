@@ -44,7 +44,11 @@ cyclewhile returns [String s]
         writeTab();
         System.out.println("}");
     }
-    :'while' '(' condition ')' '{' (line)+ '}';
+    :'while' '(' condition ')' '{'
+    {
+        System.out.println(')' + "{");
+    }
+    (line)+ '}';
 
 assignment returns [String s]
 	@after {
@@ -84,8 +88,8 @@ output returns [String s]
         writeTab();
         System.out.println("printf(\"%d\", " + $s + ");");
     }
-    :'>> ' VAR {
-        $s = $VAR.text;
+    :'>> ' factor {
+        $s = $factor.s;
     };
 
 ifclause 
@@ -101,11 +105,15 @@ ifclause
 		System.out.println("}");
 	}
 
-	: 'if' '('condition')' '{'(line)+'}';
+	: 'if' '('condition')''{'
+    {
+        System.out.println(')' + "{");
+    }
+    (line)+'}';
 
 condition returns [String s]
 	@after {
-		System.out.println($s + ") {");
+		System.out.print($s);
 	}
 	: l = expr '<' r = expr {$s = $l.s + " < " + $r.s;}
     | l = expr '<=' r = expr {$s = $l.s + " <= " + $r.s;}
@@ -118,7 +126,11 @@ expr returns [String s]
     : {$s = "";}
     | factor {$s = $factor.s;}
 	| addsub {$s = $addsub.s;}
+	| mod {$s = $mod.s;}
 	| multdiv {$s = $multdiv.s;};
+
+mod returns [String s]
+    : factor ' mod ' expr {$s = $factor.s + " mod " + $expr.s;};
 
 multdiv returns [String s]
 	: {$s = "";}
