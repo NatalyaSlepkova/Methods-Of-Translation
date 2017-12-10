@@ -2,13 +2,13 @@ grammar Grammar;
 
 main : begin (line)*;
 
-begin : '->' NAME;
+begin : '->' NAME ';';
 
 line : parserRules | lexerRules;
 
 parserRules : NAMEPARSER ':=' (NAME | NAMEPARSER) CODE? ('|' (NAME | NAMEPARSER) CODE?)* ';';
 
-lexerRules : NAME '=' REGEXP;
+lexerRules : NAME '=' REGEXP ';';
 
 REGEXP : '[' (~('\''|'\r' | '\n') | '\\\'')* ']';
 CODE : '{' (~[{}]+ CODE?)* '}' {System.out.println("code");};
